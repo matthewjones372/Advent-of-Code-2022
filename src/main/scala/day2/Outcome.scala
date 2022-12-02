@@ -6,11 +6,8 @@ enum Outcome(val points: Int):
   case Lose extends Outcome(0)
 
 object Outcome:
-  private val outcomeMapping = Map(
-    "X" -> Lose,
-    "Y" -> Draw,
-    "Z" -> Win
-  )
-
-  def from(code: String): Option[Outcome] =
-    outcomeMapping.get(code)
+  def of(code: String): Outcome =
+    code match
+      case "X" => Lose
+      case "Y" => Draw
+      case "Z" => Win

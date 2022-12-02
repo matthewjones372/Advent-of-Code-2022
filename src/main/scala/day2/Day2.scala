@@ -1,19 +1,23 @@
 package day2
 
 import scala.io.Source
+import scala.util.Using
 
 @main def main =
-  val rounds = Source
-    .fromResource("day2_input.txt")
-    .getLines()
-    .map(_.split(" "))
-    .toList
+  val rounds = Using.resource(
+    Source
+      .fromResource("day2_input.txt")
+  ) {
+    _.getLines()
+      .map(_.split(" "))
+      .toList
+  }
 
-  val solution1 = rounds.flatMap { case Array(theirCode, yourCode) =>
+  val solution1 = rounds.map { case Array(theirCode, yourCode) =>
     Score.ruleSet1(theirCode, yourCode)
   }.sum
 
-  val solution2 = rounds.flatMap { case Array(theirCode, outcomeCode) =>
+  val solution2 = rounds.map { case Array(theirCode, outcomeCode) =>
     Score.ruleSet2(theirCode, outcomeCode)
   }.sum
 

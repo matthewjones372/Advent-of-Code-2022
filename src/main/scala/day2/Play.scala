@@ -6,13 +6,11 @@ enum Play(val points: Int):
   case Scissors extends Play(3)
 
 object Play:
-  private val playMapping = Map(
-    "A" -> Rock,
-    "B" -> Paper,
-    "C" -> Scissors,
-    "X" -> Rock,
-    "Y" -> Paper,
-    "Z" -> Scissors
-  )
-  def from(code: String): Option[Play] =
-    playMapping.get(code)
+  def of(code: String): Play =
+    code match
+      case "A" => Rock
+      case "B" => Paper
+      case "C" => Scissors
+      case "X" => Rock
+      case "Y" => Paper
+      case "Z" => Scissors

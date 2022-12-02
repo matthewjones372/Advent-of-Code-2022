@@ -4,20 +4,15 @@ import Play.*
 import Outcome.*
 
 object Score:
-  def ruleSet1(theirCode: String, yourCode: String): Option[Int] = for {
-    theirPlay <- Play.from(theirCode)
-    yourPlay  <- Play.from(yourCode)
-  } yield {
+  def ruleSet1(theirCode: String, yourCode: String): Int =
+    val yourPlay  = Play.of(yourCode)
+    val theirPlay = Play.of(theirCode)
     yourPlay.points + outcomeFrom(yourPlay, theirPlay).points
-  }
 
-  def ruleSet2(theirCode: String, outcomeCode: String): Option[Int] =
-    for {
-      theirPlay      <- Play.from(theirCode)
-      desiredOutcome <- Outcome.from(outcomeCode)
-    } yield {
-      playFrom(desiredOutCome = desiredOutcome, theirPlay = theirPlay).points + desiredOutcome.points
-    }
+  def ruleSet2(theirCode: String, outcomeCode: String): Int =
+    val desiredOutcome = Outcome.of(outcomeCode)
+    val theirPlay      = Play.of(theirCode)
+    playFrom(desiredOutcome, theirPlay).points + Outcome.of(outcomeCode).points
 
   private def outcomeFrom(yourPlay: Play, theirPlay: Play): Outcome =
     (yourPlay, theirPlay) match
@@ -31,8 +26,8 @@ object Score:
       case (Scissors, Paper)    => Win
       case (Scissors, Rock)     => Lose
 
-  private def playFrom(desiredOutCome: Outcome, theirPlay: Play): Play =
-    (theirPlay, desiredOutCome) match
+  private def playFrom(desiredOutcome: Outcome, theirPlay: Play): Play =
+    (theirPlay, desiredOutcome) match
       case (Rock, Win)      => Paper
       case (Rock, Draw)     => Rock
       case (Rock, Lose)     => Scissors
