@@ -7,8 +7,7 @@ extension (seq: Seq[Int])
   def top(n: Int): Seq[Int] =
     seq.sorted.takeRight(n)
 
-object Day1 extends App:
-
+@main def main =
   val elfWeights = Using.resource(Source.fromResource("day1_input.txt"))(
     _.getLines()
       .mkString("\n")
