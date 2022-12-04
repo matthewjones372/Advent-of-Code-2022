@@ -4,11 +4,11 @@ import scala.io.Source
 import scala.util.Using
 
 object Priority:
-  private val alphas =
-    ('a' to 'z').zipWithIndex.map { case (c, i) => (c, i + 1) }.toMap
-      ++ ('A' to 'Z').zipWithIndex.map { case (c, i) => (c, i + 27) }.toMap
+  private val priorities =
+    (('a' to 'z').zipWithIndex.map { case (c, i) => (c, i + 1) } ++
+      ('A' to 'Z').zipWithIndex.map { case (c, i) => (c, i + 27) }).toMap
 
-  def of(char: Char): Int = alphas.getOrElse(char, 0)
+  def of(char: Char): Int = priorities.getOrElse(char, 0)
 
 @main def main =
   val sacks = Using.resource(
