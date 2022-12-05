@@ -8,16 +8,14 @@ import scala.util.Using
     Source
       .fromResource("day2_input.txt")
   ) {
-    _.getLines()
-      .map(_.split(" "))
-      .toList
+    _.getLines().map { case s"$l $r" => (l, r) }.toList
   }
 
-  val solution1 = rounds.map { case Array(theirCode, yourCode) =>
+  val solution1 = rounds.map { case (theirCode, yourCode) =>
     Score.ruleSet1(theirCode, yourCode)
   }.sum
 
-  val solution2 = rounds.map { case Array(theirCode, outcomeCode) =>
+  val solution2 = rounds.map { case (theirCode, outcomeCode) =>
     Score.ruleSet2(theirCode, outcomeCode)
   }.sum
 

@@ -7,7 +7,7 @@ import scala.util.Using
   def range: PartialFunction[String, Range] =
     case s"$lower-$upper" => lower.toInt to upper.toInt
 
-  val sections: List[(Range, Range)] = Using.resource(
+  val sections = Using.resource(
     Source
       .fromResource("day4_input.txt")
   ) {
