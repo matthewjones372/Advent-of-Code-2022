@@ -7,17 +7,20 @@ import scala.util.Using
   def dataStream: Iterator[Char] =
     Source.fromResource("day6_input.txt").iterator
 
-  def find(offset: Int, dataStream: Iterator[Char]): Int = {
-    val (_, index) = dataStream.zipWithIndex
-      .sliding(offset)
-      .filter(
-        _.map { case (c, _) => c }.distinct.size == offset
-      )
-      .next()
-      .last
+  extension (dataStream: Iterator[Char])
+    def findIndicatorsWith(offset: Int): Int =
+      val (_, index) = dataStream.zipWithIndex
+        .sliding(offset)
+        .filter(
+          _.map { case (c, _) => c }.distinct.size == offset
+        )
+        .next()
+        .last
 
-    index + 1
-  }
+      index + 1
 
-  println(s"${Console.RED} Part 1:${Console.GREEN} ${find(offset = 4, dataStream = dataStream)}${Console.RESET}")
-  println(s"${Console.RED} Part 2:${Console.GREEN} ${find(offset = 14, dataStream = dataStream)}${Console.RESET}")
+  val solution1 = dataStream.findIndicatorsWith(offset = 4)
+  val solution2 = dataStream.findIndicatorsWith(offset = 14)
+
+  println(s"${Console.RED} Part 1:${Console.GREEN} $solution1${Console.RESET}")
+  println(s"${Console.RED} Part 2:${Console.GREEN} $solution2${Console.RESET}")
