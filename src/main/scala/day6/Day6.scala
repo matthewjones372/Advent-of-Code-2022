@@ -4,18 +4,15 @@ import scala.io.Source
 import scala.util.Using
 
 @main def main() =
-  val dataStream: Seq[Char] = Using.resource(
-    Source.fromResource("day6_input.txt")
-  ) {
-    _.mkString.toList
-  }
+  def dataStream: Iterator[Char] =
+    Source.fromResource("day6_input.txt").iterator
 
-  def find(offset: Int, dataStream: Seq[Char]) = {
+  def find(offset: Int, dataStream: Iterator[Char]): Int = {
     val (_, index) = dataStream.zipWithIndex
       .sliding(offset)
-      .filter {
+      .filter(
         _.map { case (c, _) => c }.distinct.size == offset
-      }
+      )
       .next()
       .last
 
