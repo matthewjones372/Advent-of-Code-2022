@@ -8,7 +8,7 @@ import scala.util.Using
     Source.fromResource("day6_input.txt").iterator
 
   extension (dataStream: Iterator[Char])
-    def findIndicatorsWith(offset: Int): Int =
+    def firstIndicatorWith(offset: Int): Int =
       val (_, index) = dataStream.zipWithIndex
         .sliding(offset)
         .filter(
@@ -19,8 +19,8 @@ import scala.util.Using
 
       index + 1
 
-  val solution1 = dataStream.findIndicatorsWith(offset = 4)
-  val solution2 = dataStream.findIndicatorsWith(offset = 14)
+  val solution1 = dataStream.firstIndicatorWith(offset = 4)
+  val solution2 = dataStream.firstIndicatorWith(offset = 14)
 
   println(s"${Console.RED} Part 1:${Console.GREEN} $solution1${Console.RESET}")
   println(s"${Console.RED} Part 2:${Console.GREEN} $solution2${Console.RESET}")
