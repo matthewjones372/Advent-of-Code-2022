@@ -1,7 +1,6 @@
 package day6
 
 import scala.io.Source
-import scala.util.Using
 
 @main def main() =
   def dataStream: Iterator[Char] =
