@@ -22,9 +22,9 @@ object Score:
       case (Paper, Rock)        => Win
       case (Paper, Paper)       => Draw
       case (Paper, Scissors)    => Lose
-      case (Scissors, Scissors) => Draw
-      case (Scissors, Paper)    => Win
       case (Scissors, Rock)     => Lose
+      case (Scissors, Paper)    => Win
+      case (Scissors, Scissors) => Draw
 
   private def playFrom(desiredOutcome: Outcome, theirPlay: Play): Play =
     (theirPlay, desiredOutcome) match

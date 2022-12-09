@@ -1,7 +1,5 @@
 package day7
 
-import zio.Chunk
-
 import scala.io.Source
 
 @main def main =

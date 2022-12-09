@@ -4,7 +4,6 @@ import zio.Chunk
 import zio.prelude.*
 import zio.prelude.Associative.*
 
-
 object ElfFiles extends Subtype[Map[Chunk[String], Chunk[File]]]:
   extension (elfFiles: ElfFiles)
     def update(path: Chunk[String], file: File): ElfFiles =

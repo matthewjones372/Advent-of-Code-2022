@@ -8,9 +8,6 @@ enum Play(val points: Int):
 object Play:
   def of(code: String): Play =
     code match
-      case "A" => Rock
-      case "B" => Paper
-      case "C" => Scissors
-      case "X" => Rock
-      case "Y" => Paper
-      case "Z" => Scissors
+      case "A" | "X" => Rock
+      case "B" | "Y" => Paper
+      case "C" | "Z" => Scissors
