@@ -24,8 +24,8 @@ final class Grid(gridLines: Chunk[String]):
 
   def maxView: UIO[Int] =
     Ref.make(0).flatMap { scoreRef =>
-      ZIO.foreach(0 to gridSize) { i =>
-        ZIO.foreach(0 to gridSize) { j =>
+      ZIO.foreach(treeGrid.indices) { i =>
+        ZIO.foreach(treeGrid.indices) { j =>
           val currentTree = treeGrid(i)(j)
 
           val left = ((j - 1) to 0 by -1)
@@ -53,7 +53,8 @@ final class Grid(gridLines: Chunk[String]):
               .headOption
               .getOrElse(gridSize - i)
 
-          scoreRef.getAndUpdate(_.max(left * right * up * down))
+          val product = left * right * up * down
+          scoreRef.update(_.max(product))
         }
       } *> scoreRef.get
     }
