@@ -4,7 +4,6 @@ import zio.Chunk
 import zio.prelude.*
 import zio.prelude.Associative.*
 
-import scala.collection.immutable.IndexedSeqOps
 
 object ElfFiles extends Subtype[Map[Chunk[String], Chunk[File]]]:
   extension (elfFiles: ElfFiles)
