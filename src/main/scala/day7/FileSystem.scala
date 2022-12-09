@@ -2,7 +2,7 @@ package day7
 
 import zio.Chunk
 
-final case class FileSystem(currentDirectory: Directory, listings: Listings, elfFiles: ElfFiles) {
+final case class FileSystem(currentDirectory: Directory, listings: Listings, elfFiles: ElfFiles):
   def breakout: FileSystem =
     copy(currentDirectory = currentDirectory.dropLast)
 
@@ -17,9 +17,8 @@ final case class FileSystem(currentDirectory: Directory, listings: Listings, elf
 
   def dirSizes: Chunk[Int] =
     listings.directorySizes(elfFiles)
-}
 
-object FileSystem {
+object FileSystem:
   def empty: FileSystem = FileSystem(Directory.root, Listings.root, ElfFiles.empty)
 
   def from(lines: Seq[String]): FileSystem = lines.drop(1).foldLeft(FileSystem.empty) { case (fileSystem, command) =>
@@ -35,4 +34,3 @@ object FileSystem {
       case s"${fileSize} $_" =>
         fileSystem.addFileSize(fileSize)
   }
-}

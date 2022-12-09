@@ -5,7 +5,7 @@ final class Bridge(lines: List[String]):
     moves
       .scanLeft(List.fill(knots)(Position.zero)) { case ((head :: tail), point) =>
         tail.scanLeft(head + point) { case (prev, curr) =>
-          if (prev.isTouching(curr)) curr else (prev - curr) + curr
+          if (prev.isTouching(curr)) curr else prev.changeBetween(curr)
         }
       }
       .map(_.last)
@@ -34,8 +34,8 @@ final case class Position(x: Int, y: Int):
   def +(that: Position): Position =
     Position(this.x + that.x, this.y + that.y)
 
-  def -(that: Position): Position =
-    Position((this.x - that.x).sign, (this.y - that.y).sign)
+  def changeBetween(that: Position): Position =
+    (Position((this.x - that.x).sign, (this.y - that.y).sign)) + that
 
 object Position:
   def zero: Position = Position(0, 0)
