@@ -42,16 +42,15 @@ final class Grid(gridLines: Chunk[String]):
 
           val up = ((i - 1) to 0 by -1)
             .dropWhile(treeGrid(_)(j) < currentTree)
-            .map(t => i - t)
+            .map(u => i - u)
             .headOption
             .getOrElse(i)
 
-          val down =
-            (i + 1 to gridSize)
-              .dropWhile(treeGrid(_)(j) < currentTree)
-              .map(b => b - i)
-              .headOption
-              .getOrElse(gridSize - i)
+          val down = (i + 1 to gridSize)
+            .dropWhile(treeGrid(_)(j) < currentTree)
+            .map(d => d - i)
+            .headOption
+            .getOrElse(gridSize - i)
 
           val product = left * right * up * down
           scoreRef.update(_.max(product))
@@ -60,9 +59,8 @@ final class Grid(gridLines: Chunk[String]):
     }
 
   private def tallest(i: Int, j: Int, tallest: Int, pointRef: Ref[Set[Point]]): UIO[Int] =
-    val tree   = treeGrid(j)(i)
-    val update = if tree > tallest then pointRef.update(_ + Point(i, j)) else ZIO.unit
-    update.as(tree.max(tallest))
+    val tree = treeGrid(j)(i)
+    ZIO.when(tree > tallest)(pointRef.update(_ + Point(i, j))).as(tree.max(tallest))
 
 object Grid {
   def apply(gridLines: Chunk[String]): Grid = new Grid(gridLines)
