@@ -1,9 +1,7 @@
 package day10
 
 import zio.*
-
-import scala.io.Source
-import scala.util.Using
+import zio.nio.file.*
 
 sealed trait Instruction
 object Instruction:
@@ -16,12 +14,7 @@ object Instruction:
       case s"addx $value" => AddX(value = value.toInt)
 
 object Day10 extends ZIOAppDefault:
-  val instructions =
-    Using.resource(Source.fromResource("day10_input.txt")) { l =>
-      Chunk.fromIterator(l.getLines().map(Instruction.from))
-    }
-
-  def countInstructions: UIO[Ref[Chunk[Int]]] =
+  def countInstructions(instructions: List[Instruction]): UIO[Ref[Chunk[Int]]] =
     Ref.make(Chunk(1)).flatMap { ref =>
       ZIO
         .foreach(instructions) {
@@ -51,10 +44,11 @@ object Day10 extends ZIOAppDefault:
     )
 
   def run = (for {
-    ref <- countInstructions
-    r1  <- countRegisters(ref)
-    r2  <- decode(ref)
-    _   <- Console.printLine(s"Solution 1: $r1")
-    _   <- Console.printLine("Solution 2")
-    _   <- Console.printLine(r2)
-  } yield (r1, r2)).timed.tap { case (time, (_, _)) => Console.printLine(s"${time}ms") }
+    instructions <- Files.readAllLines(Path("src/main/resources/day10_input.txt")).map(_.map(Instruction.from))
+    ref          <- countInstructions(instructions)
+    r1           <- countRegisters(ref)
+    r2           <- decode(ref)
+    _            <- Console.printLine(s"Solution 1: $r1")
+    _            <- Console.printLine("Solution 2")
+    _            <- Console.printLine(r2)
+  } yield (r1, r2)).timed.tap { case (time, (_, _)) => Console.printLine(s"${time.toMillis}ms") }

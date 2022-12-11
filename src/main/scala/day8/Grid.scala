@@ -4,7 +4,7 @@ import zio.*
 
 final case class Point(x: Int, y: Int)
 
-final class Grid(gridLines: Chunk[String]):
+final class Grid(gridLines: List[String]):
   private val treeGrid = gridLines.map(_.map(_.toInt))
   private val gridSize = treeGrid.size - 1
 
@@ -63,5 +63,5 @@ final class Grid(gridLines: Chunk[String]):
     ZIO.when(tree > tallest)(pointRef.update(_ + Point(i, j))).as(tree.max(tallest))
 
 object Grid {
-  def apply(gridLines: Chunk[String]): Grid = new Grid(gridLines)
+  def apply(gridLines: List[String]): Grid = new Grid(gridLines)
 }
