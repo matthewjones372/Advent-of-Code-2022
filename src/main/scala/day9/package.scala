@@ -3,10 +3,13 @@ package day9
 final class Bridge(lines: List[String]):
   def tailVisitsWith(knots: Int): Int =
     moves
-      .scanLeft(List.fill(knots)(Position.zero)) { case ((head :: tail), point) =>
-        tail.scanLeft(head + point) { case (prev, curr) =>
-          if (prev.isTouching(curr)) curr else prev.changeBetween(curr)
-        }
+      .scanLeft(List.fill(knots)(Position.zero)) {
+        case ((head :: tail), point) =>
+          tail.scanLeft(head + point) { case (prev, curr) =>
+            if (prev.isTouching(curr)) curr else prev.changeBetween(curr)
+          }
+
+        case (acc, _) => acc
       }
       .map(_.last)
       .distinct

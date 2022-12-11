@@ -13,6 +13,7 @@ extension (seq: Seq[Int])
       .mkString("\n")
       .split("\n\n")
       .map(_.split("\n").map(_.toInt).sum)
+      .toList
   )
 
   val solution1 = elfWeights.max

@@ -28,11 +28,11 @@ object MonkeyParser:
     Chunk.fromIterator(it)
 
   def itemsParser: Parser[Chunk[Long]] =
-    case s"Starting items: ${items}" =>
+    case s"Starting items: $items" =>
       Chunk.fromArray(items.split(",")).map(_.trim.toLong)
 
   def operationParser: Parser[Long => Long] =
-    case s"Operation: new = old * old"  => i => i * i
+    case "Operation: new = old * old"   => num => num * num
     case s"Operation: new = old + $num" => _ + num.toLong
     case s"Operation: new = old * $num" => _ * num.toLong
 
@@ -40,5 +40,4 @@ object MonkeyParser:
     case s"Test: divisible by $num" => num.toInt
 
   def testOutcomeParser: Parser[Int] =
-    case s"If true: throw to monkey $num"  => num.toInt
-    case s"If false: throw to monkey $num" => num.toInt
+    case s"If $_: throw to monkey $num" => num.toInt

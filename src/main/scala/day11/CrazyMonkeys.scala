@@ -3,40 +3,39 @@ package day11
 import zio.*
 
 final class CrazyMonkeys(
-  initialMonkeys: Monkeys,
+  initialState: Monkeys,
   withStrategy: AdjustmentStrategy = Monkeys => Monkeys
 ):
   def simulate(rounds: Int): UIO[Long] =
-    Ref.make(withStrategy(initialMonkeys)).flatMap { ref =>
-      ZIO.foreach(1 to rounds)(_ => update(ref)) *> mostActive(ref)
+    Ref.make(withStrategy(initialState)).flatMap { ref =>
+      ZIO.foreach(1 to rounds)(_ => update(ref)) *> activeProduct(ref)
     }
 
-  private def mostActive(ref: Ref[Monkeys]): UIO[Long] =
+  private def activeProduct(ref: Ref[Monkeys]): UIO[Long] =
     ref.get.map(_.map(_.seen).sorted.takeRight(2).product)
 
   private def update(ref: Ref[Monkeys]): UIO[Monkeys] =
-    ref.getAndUpdate { monkeys =>
-      monkeys.indices.foldLeft(monkeys) { case (monkeyState, id) =>
-        val currentMonkey    = monkeyState(id)
-        val (toIds, fromIds) = currentMonkey.partitionItems
+    ref.getAndUpdate { state =>
+      state.indices.foldLeft(state) { case (state, id) =>
+        val currentMonkey      = state(id)
+        val (toIds, takingIds) = currentMonkey.partitionItems
 
-        monkeyState
+        state
           .clearItems(id)
           .giveFrom(currentMonkey, to = toIds)
-          .takeFrom(currentMonkey, other = fromIds)
+          .takeFrom(currentMonkey, other = takingIds)
       }
     }
 
 object CrazyMonkeys:
-  private val firstStrategy = (monkeys: Monkeys) =>
-    monkeys.map(monkey => monkey.copy(operation = monkey.operation(_) / 3))
+  private val firstStrategy = (state: Monkeys) => state.map(monkey => monkey.copy(operation = monkey.operation(_) / 3))
 
-  private val secondStrategy = (monkeys: Monkeys) =>
-    val productTest = monkeys.map(_.condition).product
-    monkeys.map(monkey => monkey.copy(operation = monkey.operation(_) % productTest))
+  private val secondStrategy = (state: Monkeys) =>
+    val productTest = state.map(_.condition).product
+    state.map(monkey => monkey.copy(operation = monkey.operation(_) % productTest))
 
   def withFirstStrategy(monkeys: Monkeys): CrazyMonkeys =
-    CrazyMonkeys(monkeys, firstStrategy)
+    CrazyMonkeys(initialState = monkeys, withStrategy = firstStrategy)
 
   def withSecondStrategy(monkeys: Monkeys): CrazyMonkeys =
-    CrazyMonkeys(monkeys, secondStrategy)
+    CrazyMonkeys(initialState = monkeys, withStrategy = secondStrategy)
