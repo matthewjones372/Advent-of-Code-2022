@@ -14,5 +14,4 @@ libraryDependencies ++= Seq(
   "dev.zio" %% "zio-nio"     % "2.0.0"
 )
 
-ThisBuild / semanticdbEnabled := true
-ThisBuild / scalafixOnCompile := true
+ThisBuild / semanticdbEnabled := false

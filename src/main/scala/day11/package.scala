@@ -16,8 +16,8 @@ final case class Monkey(
   def partitionItems =
     items.map(operation).partition(_ % condition == 0)
 
-  def addItems(thatItems: Chunk[Long]): Monkey =
-    copy(items = items ++ thatItems)
+  def addItems(other: Chunk[Long]): Monkey =
+    copy(items = items ++ other)
 
 type Monkeys            = Chunk[Monkey]
 type AdjustmentStrategy = Monkeys => Monkeys
@@ -31,3 +31,6 @@ extension (monkeys: Monkeys)
 
   def takeFrom(currentMonkey: Monkey, other: Chunk[Long]): Monkeys =
     monkeys.updated(currentMonkey.falselyId, monkeys(currentMonkey.falselyId).addItems(other))
+
+  def mostActiveProduct(n: Int): Long =
+    monkeys.map(_.seen).sorted.takeRight(n).product

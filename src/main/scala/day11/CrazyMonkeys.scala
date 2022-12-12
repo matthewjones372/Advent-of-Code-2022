@@ -8,11 +8,8 @@ final class CrazyMonkeys(
 ):
   def simulate(rounds: Int): UIO[Long] =
     Ref.make(withStrategy(initialState)).flatMap { ref =>
-      ZIO.foreach(1 to rounds)(_ => update(ref)) *> activeProduct(ref)
+      ZIO.foreach(1 to rounds)(_ => update(ref)) *> ref.get.map(_.mostActiveProduct(2))
     }
-
-  private def activeProduct(ref: Ref[Monkeys]): UIO[Long] =
-    ref.get.map(_.map(_.seen).sorted.takeRight(2).product)
 
   private def update(ref: Ref[Monkeys]): UIO[Monkeys] =
     ref.getAndUpdate { state =>
