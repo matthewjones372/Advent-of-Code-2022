@@ -18,9 +18,9 @@ final class Grid(points: Points):
         if point == target then costMap(point)
         else {
           val (moreRemaining, newCostMap) =
-            neighbors(point).filter(points.contains).foldLeft((remaining, costMap)) {
+            neighborsOf(point).filter(points.contains).foldLeft((remaining, costMap)) {
               case ((remaining, costMap), neighbor) =>
-                if isBlockedBy(point, neighbor) && !costMap.contains(neighbor) then {
+                if isBlocked(point, neighbor) && !costMap.contains(neighbor) then {
                   (remaining :+ neighbor, costMap.updated(neighbor, costMap(point) + 1))
                 } else (remaining, costMap)
             }
@@ -31,7 +31,7 @@ final class Grid(points: Points):
 
     loop(remaining = Chunk(start), costMap = Map(start -> 0))
 
-  private def isBlockedBy(current: Point, other: Point): Boolean =
+  private def isBlocked(current: Point, other: Point): Boolean =
     def elevation(point: Point) = points(point) match
       case 'S'   => 'a'
       case 'E'   => 'z'
@@ -39,21 +39,14 @@ final class Grid(points: Points):
 
     elevation(current) - elevation(other) <= 1
 
-  private val width  = points.keys.map(_.x).max + 1
-  private val height = points.keys.map(_.y).max + 1
-
-  private def neighbors(point: Point): Chunk[Point] =
+  private def neighborsOf(point: Point): Chunk[Point] =
     val Point(x, y) = point
     Chunk(
       Point(x - 1, y),
       Point(x + 1, y),
       Point(x, y - 1),
       Point(x, y + 1)
-    ).filter(inBounds)
-
-  private def inBounds(point: Point): Boolean =
-    point.x >= 0 && point.x < width && point.y >= 0 && point.y < height
-
+    )
 object PointParser:
   def parse(input: Chunk[String]): Points =
     input.indices.flatMap { y =>
