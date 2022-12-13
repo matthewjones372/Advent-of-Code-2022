@@ -1,12 +1,12 @@
 package day13
 
-import day13.Packet.{SeqPacket, dividerPacketOf, ordering}
+import day13.Packet.*
+import zio.*
+import zio.prelude.*
+import zio.prelude.Ord.*
 
 import scala.io.Source
 import scala.util.parsing.combinator.*
-import zio.*
-import zio.prelude.Ord.*
-import zio.prelude.*
 
 enum Packet:
   case NumberPacket(value: Int)
@@ -25,10 +25,12 @@ object Packet:
       l =?= r
   }
 
+  given scala.Ordering[Packet] = ordering.toScala
+
   private[Packet] object PacketParser extends RegexParsers:
-    private val numberPacket                 = """\d+""".r ^^ { s => NumberPacket(s.toInt) }
-    private val seqPacket                    = "[" ~> repsep(packetParser, ",") <~ "]" ^^ (l => SeqPacket(Chunk.from(l)))
-    private val packetParser: Parser[Packet] = numberPacket | seqPacket
+    private def numberPacket                 = """\d+""".r ^^ { s => NumberPacket(s.toInt) }
+    private def seqPacket                    = "[" ~> repsep(packetParser, ",") <~ "]" ^^ (l => SeqPacket(Chunk.from(l)))
+    private def packetParser: Parser[Packet] = numberPacket | seqPacket
 
     def parse(line: String): Packet =
       parseAll(packetParser, line)
@@ -59,7 +61,7 @@ object Packet:
       .sum
 
   def decodeSignal(packets: Chunk[Packet], withDividerPackets: Chunk[Packet]): Int =
-    val ordered = (packets ++ withDividerPackets).sorted(ordering.toScala)
+    val ordered = (packets ++ withDividerPackets).sorted
     withDividerPackets.map(ordered.indexOf(_) + 1).product
 
   val solution2 =
